@@ -74,6 +74,11 @@ void Image_list_all_del(struct ImageNode *head)
     }
 }
 
+void Image_list_splice(struct ImageNode *list, struct ImageNode *head)
+{
+    gxlist_splice(&(list->image_list), &(head->image_list));
+}
+
 void Image_node_print(struct ImageNode *head)
 {
     struct ImageNode *pos;
@@ -84,6 +89,7 @@ void Image_node_print(struct ImageNode *head)
     }
 }
 
+/*main for test*/
 int main(int argc, char *argv[])
 {
     struct ImageNode list_head;

@@ -30,5 +30,6 @@ void Image_list_head_init(struct ImageNode *head);
 void Image_node_add(struct ImageNode *new_node, struct ImageNode *head);
 int Image_list_empty_test(struct ImageNode *head);
 void Image_list_all_del(struct ImageNode *head);
+void Image_list_splice(struct ImageNode *list, struct ImageNode *head);
 
 #endif
