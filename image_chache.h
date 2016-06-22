@@ -23,7 +23,7 @@ struct ImageNode{
     int image_priority; /* 0的优先级最高 */
     int image_id;
     struct UserData image_data;
-    struct gxlist_head image_list;
+    struct list_head image_list;
 };
 
 void Image_list_head_init(struct ImageNode *head);

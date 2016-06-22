@@ -16,25 +16,25 @@ void Image_list_head_init(struct ImageNode *head)
 {
     head->image_priority = MAX_PRIORITY;/* 用头节点的priority记录优先级最大值 */
     head->image_id = 0;/* 用头节点的id记录node节点数 */
-    GX_INIT_LIST_HEAD(&(head->image_list));
+    INIT_LIST_HEAD(&(head->image_list));
 }
 
 void Image_node_add(struct ImageNode *new_node, struct ImageNode *head)
 {
     if(head->image_id >= MAX_IMAGE_NUM)
         _image_node_batch_del(head, IMAGE_DEL_NUM);
-    gxlist_add_tail(&(new_node->image_list), &(head->image_list));
+    list_add_tail(&(new_node->image_list), &(head->image_list));
     head->image_id++;
 }
 
 int Image_list_empty_test(struct ImageNode *head)
 {
-    return gxlist_empty(&(head->image_list));
+    return list_empty(&(head->image_list));
 }
 
 static void _image_node_del(struct ImageNode *node)
 {
-    gxlist_del(&(node->image_list));
+    list_del(&(node->image_list));
     /* do release resources ... */
     free(node);
 }
@@ -48,7 +48,7 @@ static void _image_node_batch_del(struct ImageNode *head, const int del_num)
 
     for(i = 0; i < head->image_priority; i++)
     {
-        gxlist_for_each_entry_safe(pos, pos_back, &(head->image_list), image_list)
+        list_for_each_entry_safe(pos, pos_back, &(head->image_list), image_list)
         {
             if(pos->image_priority == priority)
             {
@@ -68,7 +68,7 @@ void Image_list_all_del(struct ImageNode *head)
     struct ImageNode *pos;
     struct ImageNode *pos_back;
     head->image_id = 0;
-    gxlist_for_each_entry_safe(pos, pos_back, &(head->image_list), image_list)
+    list_for_each_entry_safe(pos, pos_back, &(head->image_list), image_list)
     {
         _image_node_del(pos);
     }
@@ -76,14 +76,14 @@ void Image_list_all_del(struct ImageNode *head)
 
 void Image_list_splice(struct ImageNode *list, struct ImageNode *head)
 {
-    gxlist_splice(&(list->image_list), &(head->image_list));
+    list_splice(&(list->image_list), &(head->image_list));
 }
 
 void Image_node_print(struct ImageNode *head)
 {
     struct ImageNode *pos;
 
-    gxlist_for_each_entry(pos, &(head->image_list), image_list)
+    list_for_each_entry(pos, &(head->image_list), image_list)
     {
         printf("priority: %d, id: %d,url: %s\n", pos->image_priority, pos->image_id,pos->image_data.url);
     }

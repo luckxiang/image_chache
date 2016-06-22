@@ -6,7 +6,7 @@
  * This is only for internal list manipulation where we know
  * the prev/next entries already!
  */
-static void __list_add(struct gxlist_head *new_node, struct gxlist_head *head, struct gxlist_head *head_next)
+static void __list_add(struct list_head *new_node, struct list_head *head, struct list_head *head_next)
 {
 	head_next->prev = new_node;
 	new_node->next = head_next;
@@ -22,7 +22,7 @@ static void __list_add(struct gxlist_head *new_node, struct gxlist_head *head, s
  * Insert a new entry after the specified head.
  * This is good for implementing stacks.
  */
-void gxlist_add(struct gxlist_head *new_node, struct gxlist_head *head)
+void list_add(struct list_head *new_node, struct list_head *head)
 {
 	__list_add(new_node, head, head->next);
 }
@@ -35,7 +35,7 @@ void gxlist_add(struct gxlist_head *new_node, struct gxlist_head *head)
  * Insert a new entry before the specified head.
  * This is useful for implementing queues.
  */
-void gxlist_add_tail(struct gxlist_head *new_node, struct gxlist_head *head)
+void list_add_tail(struct list_head *new_node, struct list_head *head)
 {
 	__list_add(new_node, head->prev, head);
 }
@@ -47,7 +47,7 @@ void gxlist_add_tail(struct gxlist_head *new_node, struct gxlist_head *head)
  * This is only for internal list manipulation where we know
  * the prev/next entries already!
  */
-static void __list_del(struct gxlist_head *prev_head, struct gxlist_head *next_head)
+static void __list_del(struct list_head *prev_head, struct list_head *next_head)
 {
 	next_head->prev = prev_head;
 	prev_head->next = next_head;
@@ -58,7 +58,7 @@ static void __list_del(struct gxlist_head *prev_head, struct gxlist_head *next_h
  * @entry: the element to delete from the list.
  * Note: list_empty on entry does not return true after this, the entry is in an undefined state.
  */
-void gxlist_del(struct gxlist_head *entry)
+void list_del(struct list_head *entry)
 {
 	__list_del(entry->prev, entry->next);
 }
@@ -67,24 +67,24 @@ void gxlist_del(struct gxlist_head *entry)
  * list_del_init - deletes entry from list and reinitialize it.
  * @entry: the element to delete from the list.
  */
-void gxlist_del_init(struct gxlist_head *entry)
+void list_del_init(struct list_head *entry)
 {
 	__list_del(entry->prev, entry->next);
-	GX_INIT_LIST_HEAD(entry);
+	INIT_LIST_HEAD(entry);
 }
 
 /**
  * list_empty - tests whether a list is empty
  * @head: the list to test.
  */
-int gxlist_empty(struct gxlist_head *head)
+int list_empty(struct list_head *head)
 {
 	return head->next == head;
 }
 
-struct gxlist_head *gxlist_get(struct gxlist_head *head)
+struct list_head *list_get(struct list_head *head)
 {
-	struct gxlist_head *first = head->next;
+	struct list_head *first = head->next;
 
 	if (first != head)  {
 		__list_del(first->prev, first->next);
@@ -99,13 +99,13 @@ struct gxlist_head *gxlist_get(struct gxlist_head *head)
  * @list: the new list to add.
  * @head: the place to add it in the first list.
  */
-void gxlist_splice(struct gxlist_head *list, struct gxlist_head *head)
+void list_splice(struct list_head *list, struct list_head *head)
 {
-	struct gxlist_head *first = list->next;
+	struct list_head *first = list->next;
 
 	if (first != list) {
-		struct gxlist_head *last = list->prev;
-		struct gxlist_head *at = head->next;
+		struct list_head *last = list->prev;
+		struct list_head *at = head->next;
 
 		first->prev = head;
 		head->next = first;

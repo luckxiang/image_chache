@@ -1,59 +1,59 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-struct gxlist_head
+struct list_head
 {
-    struct gxlist_head *next, *prev;
+    struct list_head *next, *prev;
 };
 
-#define GX_LIST_HEAD_INIT(name) { &(name), &(name) }
+#define LIST_HEAD_INIT(name) { &(name), &(name) }
 
-#define GX_LIST_HEAD(name) \
-	struct gxlist_head name = GX_LIST_HEAD_INIT(name)
+#define LIST_HEAD(name) \
+	struct list_head name = LIST_HEAD_INIT(name)
 
-#define GX_INIT_LIST_HEAD(ptr) do { \
+#define INIT_LIST_HEAD(ptr) do { \
 	(ptr)->next = (ptr); (ptr)->prev = (ptr); \
 } while (0)
 
-void gxlist_add     (struct gxlist_head *newnode, struct gxlist_head *head);
-void gxlist_add_tail(struct gxlist_head *newnode, struct gxlist_head *head);
-void gxlist_del     (struct gxlist_head *entry);
-void gxlist_del_init(struct gxlist_head *entry);
-int  gxlist_empty   (struct gxlist_head *head );
-void gxlist_splice  (struct gxlist_head *list, struct gxlist_head *head);
+void list_add     (struct list_head *newnode, struct list_head *head);
+void list_add_tail(struct list_head *newnode, struct list_head *head);
+void list_del     (struct list_head *entry);
+void list_del_init(struct list_head *entry);
+int  list_empty   (struct list_head *head );
+void list_splice  (struct list_head *list, struct list_head *head);
 
-struct gxlist_head *gxlist_get(struct gxlist_head *head);
+struct list_head *list_get(struct list_head *head);
 
-#define gxlist_entry(ptr, type, member) \
+#define list_entry(ptr, type, member) \
 	((type *)((char *)(ptr)-(unsigned long)(&((type *)0)->member)))
 
-#define gxlist_first_entry(ptr, type, member) \
-	gxlist_entry((ptr)->next, type, member)
+#define list_first_entry(ptr, type, member) \
+	list_entry((ptr)->next, type, member)
 	
-#define gxlist_for_each(pos, head) \
+#define list_for_each(pos, head) \
 	for (pos = (head)->next; pos != (head); \
 			pos = pos->next)
 
-#define gxlist_for_each_entry(pos, head, member)                            \
-	for (pos = gxlist_entry((head)->next, typeof(*pos), member);        \
+#define list_for_each_entry(pos, head, member)                            \
+	for (pos = list_entry((head)->next, typeof(*pos), member);        \
 			&pos->member != (head);                                     \
-			pos = gxlist_entry(pos->member.next, typeof(*pos), member))
+			pos = list_entry(pos->member.next, typeof(*pos), member))
 
-#define gxlist_for_each_safe(pos, n, head) \
+#define list_for_each_safe(pos, n, head) \
 	for (pos = (head)->next, n = pos->next; pos != (head); \
 			pos = n, n = pos->next)
 
-#define gxlist_for_each_entry_safe(pos, n, head, member)                           \
-	for (pos = gxlist_entry((head)->next, typeof(*pos), member),               \
-			n = gxlist_entry(pos->member.next, typeof(*pos), member);  \
+#define list_for_each_entry_safe(pos, n, head, member)                           \
+	for (pos = list_entry((head)->next, typeof(*pos), member),               \
+			n = list_entry(pos->member.next, typeof(*pos), member);  \
 			&pos->member != (head);                                    \
-			pos = n, n = gxlist_entry(n->member.next, typeof(*n), member))
+			pos = n, n = list_entry(n->member.next, typeof(*n), member))
 
-#define gxlist_for_each_entry_safe_reverse(pos, n, head, member)		\
-	for (pos = gxlist_entry((head)->prev, typeof(*pos), member),	\
-		n = gxlist_entry(pos->member.prev, typeof(*pos), member);	\
+#define list_for_each_entry_safe_reverse(pos, n, head, member)		\
+	for (pos = list_entry((head)->prev, typeof(*pos), member),	\
+		n = list_entry(pos->member.prev, typeof(*pos), member);	\
 	     &pos->member != (head); 					\
-	     pos = n, n = gxlist_entry(n->member.prev, typeof(*n), member))
+	     pos = n, n = list_entry(n->member.prev, typeof(*n), member))
 
 
 #endif
